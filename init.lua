@@ -52,6 +52,22 @@ vim.opt.rtp:prepend(lazypath)
 -- DANH SÁCH PLUGIN
 -- -----------------------
 require("lazy").setup({
+  
+{
+  "mg979/vim-visual-multi",
+  branch = "master",
+  init = function()
+    vim.g.VM_leader = '\\'  -- optional: nếu bạn muốn leader riêng cho visual-multi
+    vim.g.VM_maps = {
+      ["Find Under"] = "<C-n>",      -- select next occurrence
+      ["Find Subword Under"] = "<C-n>",
+      ["Select All"] = "<C-A>",      -- select all occurrences
+      ["Skip"] = "<C-x>",            -- skip current occurrence
+      ["Remove Region"] = "<C-p>",   -- remove current region
+    }
+  end,
+}
+
   -- UI
   { "nvim-lualine/lualine.nvim", config = function()
       require("lualine").setup({ options = { theme = "auto", icons_enabled = true } })
