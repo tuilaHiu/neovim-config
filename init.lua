@@ -66,7 +66,7 @@ require("lazy").setup({
       ["Remove Region"] = "<C-p>",   -- remove current region
     }
   end,
-}
+},
 
   -- UI
   { "nvim-lualine/lualine.nvim", config = function()
