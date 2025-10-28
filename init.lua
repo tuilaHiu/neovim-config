@@ -245,4 +245,4 @@ end
 -- Thông báo load xong
 vim.schedule(function()
   print("✅ Neovim dual-mode config loaded!")
-e
+end)
