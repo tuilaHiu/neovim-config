@@ -7,6 +7,11 @@ local is_vscode = vim.g.vscode ~= nil
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
+if is_vscode then
+  return
+end
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 -- -----------------------
@@ -62,19 +67,17 @@ require("lazy").setup({
       plugins = { spelling = { enabled = true } },
       win = { border = "rounded" },
     })
-  local function auto_show_visual(key)
-  vim.keymap.set("n", key, function()
-    vim.schedule(function()
-      require("which-key").show({ mode = "v" })
-    end)
-    return key
-  end, { expr = true, replace_keycodes = false })
-end
-
-auto_show_visual("v")      -- Visual thường
-auto_show_visual("V")      -- Visual dòng
-auto_show_visual("<C-v>")  -- Visual block
-
+    local function auto_show_visual(key)
+      vim.keymap.set("n", key, function()
+        vim.schedule(function()
+          require("which-key").show({ mode = "v" })
+        end)
+        return key
+      end, { expr = true, replace_keycodes = false })
+    end
+    auto_show_visual("v")
+    auto_show_visual("V")
+    auto_show_visual("<C-v>")
     wk.add({
       { "<leader>", group = "Leader" },
     })
@@ -169,6 +172,7 @@ auto_show_visual("<C-v>")  -- Visual block
       local t = require("telescope.builtin")
       map("n", "<leader>ff", t.find_files, { desc = "Tìm file" })
       map("n", "<leader>fg", t.live_grep, { desc = "Tìm nội dung" })
+      map("n", "<leader>fs", t.current_buffer_fuzzy_find, { desc = "Tìm trong file hiện tại" })
       map("n", "<leader>fb", t.buffers, { desc = "Tìm buffer" })
     end },
 
@@ -181,7 +185,10 @@ auto_show_visual("<C-v>")  -- Visual block
 
   -- LSP & Completion
   { "williamboman/mason.nvim", build = ":MasonUpdate",
-    config = function() require("mason").setup() end },
+    config = function()
+      require("mason").setup()
+      require("config.mason-tools").setup()
+    end },
   { "neovim/nvim-lspconfig",
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -235,14 +242,11 @@ auto_show_visual("<C-v>")  -- Visual block
 -- -----------------------
 -- CHỈ KÍCH HOẠT CÁC TÍNH NĂNG NÀY KHI KHÔNG Ở VSCode
 -- -----------------------
-if not is_vscode then
-  -- File explorer nhanh
-  map("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Toggle file tree" })
-  -- Terminal bên trong Neovim
-  map("n", "<leader>t", ":split | terminal<CR>", { desc = "Terminal" })
-end
+map("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Toggle file tree" })
+map("n", "<leader>t", ":split | terminal<CR>", { desc = "Terminal" })
 
 -- Thông báo load xong
 vim.schedule(function()
   print("✅ Neovim dual-mode config loaded!")
 end)
+-- =========================================================
